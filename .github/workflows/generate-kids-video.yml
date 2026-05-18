@@ -1,0 +1,42 @@
+name: Generate Kids Video
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # runs every 6 hours automatically
+  workflow_dispatch:          # also allows manual run from GitHub UI
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies (ffmpeg)
+        run: sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: pip install -r kids-video-generator/requirements.txt
+
+      - name: Generate video
+        run: |
+          cd kids-video-generator
+          python3 main.py
+
+      - name: Move video to output folder
+        run: |
+          mkdir -p generated-videos
+          mv kids-video-generator/kids_video_*.mp4 generated-videos/
+
+      - name: Upload video as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kids-video-${{ github.run_number }}-${{ github.run_attempt }}
+          path: generated-videos/*.mp4
+          retention-days: 90
