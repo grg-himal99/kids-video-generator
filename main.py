@@ -70,7 +70,7 @@ def main():
 
     try:
         # 1. Generate story
-        print("Step 1/4: Writing story...")
+        print("Step 1/4: Writing story (Gemini)...")
         story = generate_story(topic)
         with open(story_path, "w") as f:
             json.dump(story, f, indent=2)

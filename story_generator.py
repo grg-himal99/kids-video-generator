@@ -2,12 +2,8 @@ import json
 import os
 import random
 
-import anthropic
+import google.generativeai as genai
 
-# ---------------------------------------------------------------------------
-# System prompt — cached on the API side so repeated calls in the same
-# session pay only 0.1× of the input-token cost after the first request.
-# ---------------------------------------------------------------------------
 _SYSTEM_PROMPT = """\
 You are a kids video story writer who creates Blippi-style educational content for children ages 2-6.
 
@@ -29,7 +25,7 @@ IMAGE PROMPT RULES:
 - Add exciting details: "speed lines", "flashing lights", "dirt flying", "water spraying"
 - End with: "digital art for kids, educational kids show style"
 
-OUTPUT FORMAT — return ONLY valid JSON, no markdown, no explanation:
+Return ONLY valid JSON — no markdown fences, no explanation:
 {
   "title": "Catchy Title for the Video!",
   "scenes": [
@@ -45,61 +41,28 @@ OUTPUT FORMAT — return ONLY valid JSON, no markdown, no explanation:
 Generate EXACTLY 5 scenes. scene_number must be 1 through 5.
 """
 
-_JSON_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "title": {"type": "string"},
-        "scenes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "scene_number": {"type": "integer"},
-                    "title_text": {"type": "string"},
-                    "narration": {"type": "string"},
-                    "image_prompt": {"type": "string"},
-                },
-                "required": ["scene_number", "title_text", "narration", "image_prompt"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    "required": ["title", "scenes"],
-    "additionalProperties": False,
-}
 
+def _generate_story_with_gemini(topic: str) -> dict:
+    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-def _generate_story_with_claude(topic: str) -> dict:
-    client = anthropic.Anthropic()
-
-    response = client.messages.create(
-        model="claude-haiku-4-5",
-        max_tokens=1024,
-        system=[
-            {
-                "type": "text",
-                "text": _SYSTEM_PROMPT,
-                "cache_control": {"type": "ephemeral"},
-            }
-        ],
-        messages=[
-            {
-                "role": "user",
-                "content": (
-                    f'Create a Blippi-style kids video story about: "{topic}"\n'
-                    "Exactly 5 scenes. Each scene needs energetic narration with sound effects."
-                ),
-            }
-        ],
-        output_config={"format": {"type": "json_schema", "schema": _JSON_SCHEMA}},
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=genai.GenerationConfig(
+            response_mime_type="application/json",
+            temperature=0.9,
+        ),
+        system_instruction=_SYSTEM_PROMPT,
     )
 
-    text = next(b.text for b in response.content if b.type == "text")
-    story = json.loads(text)
+    response = model.generate_content(
+        f'Create a Blippi-style kids video story about: "{topic}"\n'
+        "Exactly 5 scenes. Each scene needs energetic narration with sound effects."
+    )
 
+    story = json.loads(response.text)
     scenes = story.get("scenes", [])
     if len(scenes) != 5:
-        raise ValueError(f"Claude returned {len(scenes)} scenes instead of 5")
+        raise ValueError(f"Gemini returned {len(scenes)} scenes instead of 5")
 
     # Ensure scene_numbers are 1-5 in order
     for i, scene in enumerate(scenes, 1):
@@ -462,15 +425,15 @@ def _generate_story_from_template(topic: str) -> dict:
 
 
 def generate_story(topic: str) -> dict:
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        print("  ANTHROPIC_API_KEY not set — using built-in template.")
+    if not os.getenv("GEMINI_API_KEY"):
+        print("  GEMINI_API_KEY not set — using built-in template.")
         return _generate_story_from_template(topic)
 
     try:
-        print(f"  Generating story with Claude for: \"{topic}\"...")
-        story = _generate_story_with_claude(topic)
-        print(f"  Claude story ready: \"{story['title']}\" ({len(story['scenes'])} scenes)")
+        print(f"  Generating story with Gemini for: \"{topic}\"...")
+        story = _generate_story_with_gemini(topic)
+        print(f"  Gemini story ready: \"{story['title']}\" ({len(story['scenes'])} scenes)")
         return story
     except Exception as exc:
-        print(f"  Claude generation failed ({exc}) — falling back to template.")
+        print(f"  Gemini generation failed ({exc}) — falling back to template.")
         return _generate_story_from_template(topic)
