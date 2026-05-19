@@ -25,6 +25,7 @@ TOPICS = [
     "food around the world",
     "building a treehouse",
     "world cultures celebration",
+    "5 amazing vehicles",
 ]
 
 # Story templates per topic
@@ -282,6 +283,41 @@ _STORIES = {
             {"scene_number": 3, "title_text": "Hammering Away!", "narration": "Bang bang bang went the hammers! Every plank they nailed made the treehouse grow bigger and stronger!", "image_prompt": "children's book illustration, children happily hammering planks onto a growing treehouse structure in a big tree, wood shavings flying, focused and proud expressions, bright outdoors, digital art for kids"},
             {"scene_number": 4, "title_text": "Adding the Extras!", "narration": "They added a rope ladder, a little window, and a flag on top — their treehouse was totally perfect!", "image_prompt": "children's book illustration, children adding finishing touches to a completed treehouse, hanging a flag, painting walls, adding a rope ladder, proud happy faces, colourful treehouse in a big tree, digital art for kids"},
             {"scene_number": 5, "title_text": "Our Secret Hideout!", "narration": "That evening they sat in their treehouse watching the stars and knew it was the best thing they had ever built!", "image_prompt": "children's book illustration, happy children sitting inside their cosy treehouse at night, looking out the window at stars, fairy lights inside, warm golden glow, magical peaceful scene, digital art for kids"},
+        ],
+    },
+    "5 amazing vehicles": {
+        "title": "5 Amazing Vehicles! Let's Go!",
+        "scenes": [
+            {
+                "scene_number": 1,
+                "title_text": "The Big Yellow Bus!",
+                "narration": "Beep beep! Look at this HUGE yellow school bus! It has big round wheels and lots of windows! The bus picks up kids every morning and takes them to school! Can you say BUS? The driver opens the doors — WHOOSH — and everyone hops on! Buses are SO cool!",
+                "image_prompt": "children's book illustration, big bright yellow school bus with open doors, friendly cartoon bus driver waving, excited kids boarding with backpacks, sunny street with houses, big round wheels, cheerful vibrant colors, Blippi-style educational kids show scene, digital art for kids",
+            },
+            {
+                "scene_number": 2,
+                "title_text": "The Giant Truck!",
+                "narration": "VROOM VROOM! Oh WOW — it's a giant truck! Trucks are SO big and SO strong! They carry heavy things like food, toys, and furniture all around the world! This truck has eighteen big wheels! Count with me — one, two, three! The driver sits way up HIGH in the cab. Trucks are AMAZING!",
+                "image_prompt": "children's book illustration, massive big rig semi truck with shiny chrome grille and 18 wheels on a highway, friendly cartoon truck driver waving from high cab window, bright blue sky, speed lines showing movement, cargo containers, exciting action scene, Blippi-style vibrant educational kids illustration, digital art for kids",
+            },
+            {
+                "scene_number": 3,
+                "title_text": "The Excavator Digs!",
+                "narration": "Whoa whoa WHOA! Look at that EXCAVATOR! It has a super long arm called a boom and a big scoop called a bucket! The excavator digs BIG holes in the ground — SCOOP SCOOP SCOOP! It can swing all the way around! Construction workers use excavators to build roads, houses, and parks! DIG DIG DIG!",
+                "image_prompt": "children's book illustration, large yellow excavator with extended boom arm scooping a big pile of dirt, construction site with orange safety cones, cartoon construction worker in hard hat giving thumbs up, dirt flying from bucket, big pile of earth, Blippi-style bright educational kids illustration, digital art for kids",
+            },
+            {
+                "scene_number": 4,
+                "title_text": "The Fire Truck!",
+                "narration": "WEE WOO WEE WOO! Here comes the FIRE TRUCK! It is bright RED and has flashing lights! Fire trucks carry brave firefighters and a really long ladder that goes way up high! They also have a giant hose to spray water on fires! Firefighters are HEROES! When you hear the siren, move out of the way — because they are coming to help!",
+                "image_prompt": "children's book illustration, big shiny red fire truck with flashing red and white lights, tall ladder extended up high, brave smiling firefighter in full gear holding a water hose with water spraying, excited children watching safely from sidewalk, dramatic action scene, Blippi-style bright vibrant educational kids illustration, digital art for kids",
+            },
+            {
+                "scene_number": 5,
+                "title_text": "The Police Car!",
+                "narration": "WHOOP WHOOP! It is a POLICE CAR! Police cars are blue and white and have super bright flashing lights on top! Police officers drive really fast to help keep everyone safe! The siren goes WEE WOO WEE WOO and all the other cars move out of the way! Police officers are our COMMUNITY HEROES! Thank you police officers!",
+                "image_prompt": "children's book illustration, sleek blue and white police car with bright flashing red and blue lights on roof, friendly smiling cartoon police officer waving from window, children on sidewalk waving back, police badge visible, city street background, Blippi-style bright energetic educational kids illustration, digital art for kids",
+            },
         ],
     },
     "world cultures celebration": {

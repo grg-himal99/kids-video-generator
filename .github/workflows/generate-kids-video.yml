@@ -22,17 +22,15 @@ jobs:
         run: sudo apt-get install -y ffmpeg
 
       - name: Install Python dependencies
-        run: pip install -r kids-video-generator/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Generate video
-        run: |
-          cd kids-video-generator
-          python3 main.py
+        run: python3 main.py
 
       - name: Move video to output folder
         run: |
           mkdir -p generated-videos
-          mv kids-video-generator/kids_video_*.mp4 generated-videos/
+          mv kids_video_*.mp4 generated-videos/
 
       - name: Upload video as artifact
         uses: actions/upload-artifact@v4
