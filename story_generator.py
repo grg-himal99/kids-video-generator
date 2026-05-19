@@ -1,4 +1,112 @@
+import json
+import os
 import random
+
+import anthropic
+
+# ---------------------------------------------------------------------------
+# System prompt — cached on the API side so repeated calls in the same
+# session pay only 0.1× of the input-token cost after the first request.
+# ---------------------------------------------------------------------------
+_SYSTEM_PROMPT = """\
+You are a kids video story writer who creates Blippi-style educational content for children ages 2-6.
+
+STYLE RULES:
+- Be extremely enthusiastic and energetic (Blippi's signature style)
+- Use LOTS of sound effects written in ALL CAPS: VROOM VROOM!, BEEP BEEP!, WEE WOO WEE WOO!, SCOOP SCOOP!, SPLASH!, BOOM!, WHOOSH!
+- Start sentences with exclamations: "WOW!", "OH WOW!", "WHOA!", "Look at THAT!", "Can you believe it?"
+- Ask the audience questions: "Can you say BUS?", "Did you know...?", "Count with me!"
+- Repeat key words for emphasis: "It's SO big! SO SO big!"
+- Keep vocabulary very simple — ages 2-6
+- Each narration: 3-5 energetic sentences, 30-50 words, with at least 2 sound effects
+- Each title_text: 3-6 words, catchy, ends with ! when possible
+
+IMAGE PROMPT RULES:
+- Always start with: "children's book illustration, Blippi-style,"
+- Describe bright, vibrant, primary colors
+- Include a friendly cartoon character (driver, worker, child) waving or smiling
+- Show the vehicle/subject doing its main action
+- Add exciting details: "speed lines", "flashing lights", "dirt flying", "water spraying"
+- End with: "digital art for kids, educational kids show style"
+
+OUTPUT FORMAT — return ONLY valid JSON, no markdown, no explanation:
+{
+  "title": "Catchy Title for the Video!",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "title_text": "Short Scene Title!",
+      "narration": "WOW! Energetic narration with SOUND EFFECTS! Educational fact! Can you say the word?",
+      "image_prompt": "children's book illustration, Blippi-style, [detailed scene description], digital art for kids, educational kids show style"
+    }
+  ]
+}
+
+Generate EXACTLY 5 scenes. scene_number must be 1 through 5.
+"""
+
+_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "title": {"type": "string"},
+        "scenes": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "scene_number": {"type": "integer"},
+                    "title_text": {"type": "string"},
+                    "narration": {"type": "string"},
+                    "image_prompt": {"type": "string"},
+                },
+                "required": ["scene_number", "title_text", "narration", "image_prompt"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["title", "scenes"],
+    "additionalProperties": False,
+}
+
+
+def _generate_story_with_claude(topic: str) -> dict:
+    client = anthropic.Anthropic()
+
+    response = client.messages.create(
+        model="claude-haiku-4-5",
+        max_tokens=1024,
+        system=[
+            {
+                "type": "text",
+                "text": _SYSTEM_PROMPT,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": (
+                    f'Create a Blippi-style kids video story about: "{topic}"\n'
+                    "Exactly 5 scenes. Each scene needs energetic narration with sound effects."
+                ),
+            }
+        ],
+        output_config={"format": {"type": "json_schema", "schema": _JSON_SCHEMA}},
+    )
+
+    text = next(b.text for b in response.content if b.type == "text")
+    story = json.loads(text)
+
+    scenes = story.get("scenes", [])
+    if len(scenes) != 5:
+        raise ValueError(f"Claude returned {len(scenes)} scenes instead of 5")
+
+    # Ensure scene_numbers are 1-5 in order
+    for i, scene in enumerate(scenes, 1):
+        scene["scene_number"] = i
+
+    return story
+
 
 TOPICS = [
     "friendly dinosaurs",
@@ -337,11 +445,9 @@ def get_random_topic() -> str:
     return random.choice(TOPICS)
 
 
-def generate_story(topic: str) -> dict:
-    # Normalize topic to match a known key
+def _generate_story_from_template(topic: str) -> dict:
     key = topic.lower().strip()
     if key not in _STORIES:
-        # Pick the closest match or random
         for k in _STORIES:
             if any(word in k for word in key.split()):
                 key = k
@@ -353,3 +459,18 @@ def generate_story(topic: str) -> dict:
     story["scenes"] = [s.copy() for s in story["scenes"]]
     print(f"  Using built-in story template for: {key}")
     return story
+
+
+def generate_story(topic: str) -> dict:
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        print("  ANTHROPIC_API_KEY not set — using built-in template.")
+        return _generate_story_from_template(topic)
+
+    try:
+        print(f"  Generating story with Claude for: \"{topic}\"...")
+        story = _generate_story_with_claude(topic)
+        print(f"  Claude story ready: \"{story['title']}\" ({len(story['scenes'])} scenes)")
+        return story
+    except Exception as exc:
+        print(f"  Claude generation failed ({exc}) — falling back to template.")
+        return _generate_story_from_template(topic)
