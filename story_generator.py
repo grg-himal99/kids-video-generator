@@ -1,8 +1,10 @@
 import json
 import os
 import random
+import time
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 _SYSTEM_PROMPT = """\
 You are a kids video story writer who creates Blippi-style educational content for children ages 2-6.
@@ -43,21 +45,29 @@ Generate EXACTLY 5 scenes. scene_number must be 1 through 5.
 
 
 def _generate_story_with_gemini(topic: str) -> dict:
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-    model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        generation_config=genai.GenerationConfig(
-            response_mime_type="application/json",
-            temperature=0.9,
-        ),
-        system_instruction=_SYSTEM_PROMPT,
-    )
-
-    response = model.generate_content(
-        f'Create a Blippi-style kids video story about: "{topic}"\n'
-        "Exactly 5 scenes. Each scene needs energetic narration with sound effects."
-    )
+    for attempt in range(1, 4):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=(
+                    f'Create a Blippi-style kids video story about: "{topic}"\n'
+                    "Exactly 5 scenes. Each scene needs energetic narration with sound effects."
+                ),
+                config=types.GenerateContentConfig(
+                    system_instruction=_SYSTEM_PROMPT,
+                    response_mime_type="application/json",
+                    temperature=0.9,
+                ),
+            )
+            break
+        except Exception as e:
+            if attempt == 3:
+                raise
+            wait = 15 * attempt
+            print(f"  Gemini attempt {attempt} failed ({e!s:.80}...) — retrying in {wait}s")
+            time.sleep(wait)
 
     story = json.loads(response.text)
     scenes = story.get("scenes", [])
