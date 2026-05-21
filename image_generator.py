@@ -7,15 +7,15 @@ import requests
 from PIL import Image
 
 # Pollinations.ai — completely free, no API key needed
-POLLINATIONS_URL = "https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}&nologo=true&model=flux"
+POLLINATIONS_URL = "https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}&nologo=true&model=flux-realism"
 VIDEO_WIDTH = 1280
 VIDEO_HEIGHT = 720
 
 
 def generate_scene_image(prompt: str, scene_number: int, output_dir: str) -> str:
     full_prompt = (
-        "children's book illustration style, bright vibrant colors, cute and friendly, "
-        f"safe for children, no text, {prompt}"
+        "photorealistic, cinematic photography, sharp focus, professional DSLR, "
+        f"no text, no watermark, {prompt}"
     )
     encoded = quote(full_prompt)
     url = POLLINATIONS_URL.format(prompt=encoded, w=VIDEO_WIDTH, h=VIDEO_HEIGHT)

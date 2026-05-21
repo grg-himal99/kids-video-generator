@@ -20,12 +20,12 @@ STYLE RULES:
 - Each title_text: 3-6 words, catchy, ends with ! when possible
 
 IMAGE PROMPT RULES:
-- Always start with: "children's book illustration, Blippi-style,"
-- Describe bright, vibrant, primary colors
-- Include a friendly cartoon character (driver, worker, child) waving or smiling
-- Show the vehicle/subject doing its main action
-- Add exciting details: "speed lines", "flashing lights", "dirt flying", "water spraying"
-- End with: "digital art for kids, educational kids show style"
+- Always start with: "photorealistic, cinematic shot,"
+- Describe real-world environments with natural lighting (golden hour, bright daylight, dramatic sky)
+- Include a real child (age 4-7) or friendly adult interacting with the subject — smiling, pointing, exploring
+- Show the subject doing its main action in vivid detail (e.g. excavator arm mid-scoop, fire truck hose spraying water)
+- Add cinematic details: "shallow depth of field", "lens flare", "motion blur on moving parts", "dust particles in sunlight"
+- End with: "4K, sharp focus, vibrant colors, exciting and joyful atmosphere"
 
 Return ONLY valid JSON — no markdown fences, no explanation:
 {
@@ -373,31 +373,31 @@ _STORIES = {
                 "scene_number": 1,
                 "title_text": "The Big Yellow Bus!",
                 "narration": "Beep beep! Look at this HUGE yellow school bus! It has big round wheels and lots of windows! The bus picks up kids every morning and takes them to school! Can you say BUS? The driver opens the doors — WHOOSH — and everyone hops on! Buses are SO cool!",
-                "image_prompt": "children's book illustration, big bright yellow school bus with open doors, friendly cartoon bus driver waving, excited kids boarding with backpacks, sunny street with houses, big round wheels, cheerful vibrant colors, Blippi-style educational kids show scene, digital art for kids",
+                "image_prompt": "photorealistic, cinematic shot, real yellow school bus with open doors on a sunny suburban street, friendly bus driver smiling and waving, excited children with backpacks boarding, golden morning light, shallow depth of field, 4K sharp focus, vibrant colors, joyful atmosphere",
             },
             {
                 "scene_number": 2,
                 "title_text": "The Giant Truck!",
                 "narration": "VROOM VROOM! Oh WOW — it's a giant truck! Trucks are SO big and SO strong! They carry heavy things like food, toys, and furniture all around the world! This truck has eighteen big wheels! Count with me — one, two, three! The driver sits way up HIGH in the cab. Trucks are AMAZING!",
-                "image_prompt": "children's book illustration, massive big rig semi truck with shiny chrome grille and 18 wheels on a highway, friendly cartoon truck driver waving from high cab window, bright blue sky, speed lines showing movement, cargo containers, exciting action scene, Blippi-style vibrant educational kids illustration, digital art for kids",
+                "image_prompt": "photorealistic, cinematic shot, massive chrome semi truck with 18 wheels on a wide open highway, truck driver smiling from high cab window, motion blur on wheels, dramatic blue sky with clouds, dust particles in sunlight, low angle shot making truck look enormous, 4K sharp focus",
             },
             {
                 "scene_number": 3,
                 "title_text": "The Excavator Digs!",
                 "narration": "Whoa whoa WHOA! Look at that EXCAVATOR! It has a super long arm called a boom and a big scoop called a bucket! The excavator digs BIG holes in the ground — SCOOP SCOOP SCOOP! It can swing all the way around! Construction workers use excavators to build roads, houses, and parks! DIG DIG DIG!",
-                "image_prompt": "children's book illustration, large yellow excavator with extended boom arm scooping a big pile of dirt, construction site with orange safety cones, cartoon construction worker in hard hat giving thumbs up, dirt flying from bucket, big pile of earth, Blippi-style bright educational kids illustration, digital art for kids",
+                "image_prompt": "photorealistic, cinematic shot, large yellow Caterpillar excavator with boom arm extended mid-scoop lifting a huge pile of earth, real construction site, dirt and dust flying dramatically, construction worker in orange hard hat smiling nearby, golden hour lighting, lens flare, 4K sharp focus",
             },
             {
                 "scene_number": 4,
                 "title_text": "The Fire Truck!",
                 "narration": "WEE WOO WEE WOO! Here comes the FIRE TRUCK! It is bright RED and has flashing lights! Fire trucks carry brave firefighters and a really long ladder that goes way up high! They also have a giant hose to spray water on fires! Firefighters are HEROES! When you hear the siren, move out of the way — because they are coming to help!",
-                "image_prompt": "children's book illustration, big shiny red fire truck with flashing red and white lights, tall ladder extended up high, brave smiling firefighter in full gear holding a water hose with water spraying, excited children watching safely from sidewalk, dramatic action scene, Blippi-style bright vibrant educational kids illustration, digital art for kids",
+                "image_prompt": "photorealistic, cinematic shot, shiny red fire truck with ladder fully extended, firefighter in full turnout gear holding a hose with powerful water jet spraying, flashing red and white emergency lights, dramatic action scene, water droplets catching the light, shallow depth of field, 4K sharp focus",
             },
             {
                 "scene_number": 5,
                 "title_text": "The Police Car!",
                 "narration": "WHOOP WHOOP! It is a POLICE CAR! Police cars are blue and white and have super bright flashing lights on top! Police officers drive really fast to help keep everyone safe! The siren goes WEE WOO WEE WOO and all the other cars move out of the way! Police officers are our COMMUNITY HEROES! Thank you police officers!",
-                "image_prompt": "children's book illustration, sleek blue and white police car with bright flashing red and blue lights on roof, friendly smiling cartoon police officer waving from window, children on sidewalk waving back, police badge visible, city street background, Blippi-style bright energetic educational kids illustration, digital art for kids",
+                "image_prompt": "photorealistic, cinematic shot, blue and white police patrol car with red and blue lights flashing on roof, friendly police officer in uniform smiling and waving, child waving back on sidewalk, city street at dusk with light trails, vibrant colors, 4K sharp focus, exciting and safe atmosphere",
             },
         ],
     },
