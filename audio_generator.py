@@ -1,14 +1,24 @@
+import asyncio
 import os
 
+import edge_tts
 import numpy as np
-from gtts import gTTS
 from scipy.io import wavfile
+
+# en-US-GuyNeural: passionate, energetic — closest to Blippi's style
+_VOICE = "en-US-GuyNeural"
+_RATE = "+15%"   # slightly faster = more excited energy
+_PITCH = "+5Hz"  # slightly brighter tone for kids content
+
+
+async def _synthesise(text: str, path: str) -> None:
+    communicate = edge_tts.Communicate(text, _VOICE, rate=_RATE, pitch=_PITCH)
+    await communicate.save(path)
 
 
 def generate_narration(text: str, scene_number: int, output_dir: str) -> str:
-    tts = gTTS(text=text, lang="en", slow=False)
     path = os.path.join(output_dir, f"narration_{scene_number:02d}.mp3")
-    tts.save(path)
+    asyncio.run(_synthesise(text, path))
     return path
 
 
